@@ -17,6 +17,25 @@ export default function QuizPage() {
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<Record<string, string[]>>({});
   const [showResult, setShowResult] = useState(false);
+  const [jumpTo, setJumpTo] = useState("");
+
+  const handleJump = () => {
+  const num = Number(jumpTo);
+
+  if (
+    Number.isNaN(num) ||
+    num < 1 ||
+    num > questions.length
+  ) {
+    alert(`Vui lòng nhập số từ 1 đến ${questions.length}`);
+    return;
+  }
+
+  setShowResult(false);
+  setCurrent(num - 1); // vì index bắt đầu từ 0
+  setJumpTo("");
+};
+
 
   // ⬇️ Export localStorage → file JSON
 const handleExport = () => {
@@ -147,7 +166,7 @@ const handleImport = (file: File) => {
           )}
         </div>
 
-        <h2 className="text-black text-lg font-semibold mb-4">
+        <h2 className="text-black text-lg mb-4">
           {q.question}
         </h2>
 
@@ -234,6 +253,25 @@ const handleImport = (file: File) => {
       className="text-sm text-green-600 hover:underline"
     >
       ⬆️ Import progress
+    </button>
+  </div>
+
+  {/* Jump to question */}
+  <div className="flex items-center gap-2">
+    <input
+      type="number"
+      min={1}
+      max={questions.length}
+      value={jumpTo}
+      onChange={(e) => setJumpTo(e.target.value)}
+      placeholder="Go to #"
+      className="text-white w-20 px-2 py-1 border rounded text-sm text-black"
+    />
+    <button
+      onClick={handleJump}
+      className="text-white px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+    >
+      Go
     </button>
   </div>
 </div>
